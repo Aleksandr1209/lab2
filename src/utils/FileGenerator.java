@@ -1,4 +1,4 @@
-package classes;
+package utils;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;

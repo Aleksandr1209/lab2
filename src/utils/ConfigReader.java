@@ -1,7 +1,6 @@
-package classes;
+package utils;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Properties;
 
 public class ConfigReader {
@@ -24,20 +23,12 @@ public class ConfigReader {
         return properties.getProperty(key);
     }
 
-    public int getTaskType() {
-        return Integer.parseInt(properties.getProperty("taskType"));
-    }
-
-    public int getUnevenThreads() {
-        return Integer.parseInt(properties.getProperty("unevenThreads"));
-    }
-
-    public int[] getElementsPerThread() {
-        String[] parts = properties.getProperty("elementsPerThread").split(",");
-        int[] elements = new int[parts.length];
+    public int[] getIntArray(String key) {
+        String[] parts = properties.getProperty(key).split(",");
+        int[] array = new int[parts.length];
         for (int i = 0; i < parts.length; i++) {
-            elements[i] = Integer.parseInt(parts[i]);
+            array[i] = Integer.parseInt(parts[i]);
         }
-        return elements;
+        return array;
     }
 }

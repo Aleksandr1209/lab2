@@ -1,4 +1,6 @@
-import classes.*;
+import operations.TaskType;
+import processors.*;
+import utils.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -6,10 +8,9 @@ public class Main {
 
         int N = config.getInt("N");
         int multiplier = config.getInt("multiplier");
-        int taskType = config.getTaskType();
-        int M = config.getInt("M");
         String inputFile = config.getString("inputFile");
-        int[] elementsPerThread = config.getElementsPerThread();
+        int numThreads = config.getInt("M");
+        int[] elementsPerThread = config.getIntArray("elementsPerThread");
 
         FileGenerator fileGenerator = new FileGenerator();
         fileGenerator.generate(N, inputFile);
@@ -17,19 +18,22 @@ public class Main {
         int[] array = Utils.readFileToArray(inputFile, N);
         int[] arrayCopy = array.clone();
 
-        SequentialProcessor sequentialProcessor = new SequentialProcessor();
-        ParallelProcessor parallelProcessor = new ParallelProcessor();
+        Processor sequentialProcessor = new SequentialProcessor();
+        ParallelProcessor parallelProcessor = new ParallelProcessor(numThreads);
 
         long startTime = System.nanoTime();
-        sequentialProcessor.process(array, multiplier, 0);
+        sequentialProcessor.process(array, multiplier, TaskType.MULTIPLY);
         long endTime = System.nanoTime();
         System.out.println("Простая задача (последовательная): " + (endTime - startTime) + " нс");
 
         array = arrayCopy.clone();
         startTime = System.nanoTime();
-        parallelProcessor.process(array, multiplier, M, 0);
+        parallelProcessor.process(array, multiplier, TaskType.MULTIPLY);
         endTime = System.nanoTime();
         System.out.println("Простая задача (многопоточная): " + (endTime - startTime) + " нс");
+
+        int taskTypeIndex = config.getInt("taskType");
+        TaskType taskType = TaskType.values()[taskTypeIndex];
 
         array = arrayCopy.clone();
         startTime = System.nanoTime();
@@ -39,7 +43,7 @@ public class Main {
 
         array = arrayCopy.clone();
         startTime = System.nanoTime();
-        parallelProcessor.process(array, multiplier, M, taskType);
+        parallelProcessor.process(array, multiplier, taskType);
         endTime = System.nanoTime();
         System.out.println("Сложная задача (многопоточная): " + (endTime - startTime) + " нс");
 
