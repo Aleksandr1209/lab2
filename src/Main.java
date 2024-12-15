@@ -14,8 +14,9 @@ public class Main {
 
         FileGenerator fileGenerator = new FileGenerator();
         fileGenerator.generate(N, inputFile);
+        FileReaderUtil fileReaderUtil = new FileReaderUtil("numbers.txt");
 
-        int[] array = Utils.readFileToArray(inputFile, N);
+        int[] array = fileReaderUtil.readFileToArray(N);
         int[] arrayCopy = array.clone();
 
         Processor sequentialProcessor = new SequentialProcessor();
